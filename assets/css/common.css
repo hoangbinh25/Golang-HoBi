@@ -1,0 +1,78 @@
+.navbar {
+    text-decoration: none;
+    color: #000;
+    cursor: default;
+
+    :hover {
+        color: #000;
+    }
+}
+
+.bg-common {
+    background-color: var(--primary-color);
+}
+
+.form {
+    position: relative;
+}
+
+.form_login {
+    position: absolute;
+    color: #fff;
+    padding: 20px 20px;
+    top: 130px;
+    right: 200px;
+    background-color: #fff;
+    border-radius: 4px;
+    width: 30%;
+}
+
+.forget-pass {
+    font-size: 14px;
+}
+
+.btn-login {
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    border-radius: 2px;
+}
+
+.disc {
+    color: var(--primary-color);
+}
+
+.policy {
+    font-size: 12px;
+    text-align: center;
+}
+
+.mt-8 {
+    margin-top: 8rem;
+}
+
+.ml-5 {
+    margin-left: 5rem;
+}
+
+.btn {
+    background-color: #ee4d2d;
+    border-radius: 2px;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 2px;
+}
+
+.btn_save {
+    background-color: #ee4d2d;
+    border-radius: 2px;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 2px;
+}
+
+.text-primary {
+    color: var(--primary-color)!important;
+}

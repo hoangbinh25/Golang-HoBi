@@ -1,0 +1,8 @@
+[build]
+    bin = "tmp/main"
+    cmd = "go build -o tmp/ main.go"
+    include_ext = ["go", "tpl", "tmpl", "html"]
+    exclude_dir = ["vendor"]
+
+[log]
+    time = true

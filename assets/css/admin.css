@@ -1,0 +1,124 @@
+:root {
+    --primary-color: #4e73df;
+    --secondary-color: #858796;
+    --success-color: #1cc88a;
+    --danger-color: #e74a3b;
+    --sidebar-dark: #212529;
+}
+
+body {
+    background-color: #f8f9fc;
+    font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+#wrapper {
+    display: flex;
+}
+
+#sidebar {
+    min-height: 100vh;
+    width: 250px;
+    background: var(--sidebar-dark);
+    color: white;
+    transition: all 0.3s;
+}
+
+#content-wrapper {
+    flex: 1 0 auto;
+
+}
+
+.sidebar-brand {
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-item {
+    padding: 12px 20px;
+    color: rgba(255, 255, 255, 0.8);
+    border-left: 3px solid transparent;
+    transition: all 0.2s;
+}
+
+.sidebar-item:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-left: 3px solid var(--primary-color);
+    color: white;
+}
+
+.sidebar-item.active {
+    background-color: rgba(78, 115, 223, 0.2);
+    border-left: 3px solid var(--primary-color);
+    color: white;
+}
+
+.sidebar-item i {
+    width: 20px;
+    margin-right: 10px;
+    text-align: center;
+}
+
+.content {
+    padding: 20px;
+}
+
+.card-dashboard {
+    border-radius: 5px;
+    border-left: 4px solid;
+    margin-bottom: 20px;
+    box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15);
+}
+
+.card-dashboard.primary {
+    border-left-color: var(--primary-color);
+}
+
+.card-dashboard.success {
+    border-left-color: var(--success-color);
+}
+
+.card-dashboard.info {
+    border-left-color: #36b9cc;
+}
+
+.card-dashboard.warning {
+    border-left-color: #f6c23e;
+}
+
+.card-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--secondary-color);
+    text-transform: uppercase;
+}
+
+.table-product img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 3px;
+}
+
+.btn-circle {
+    border-radius: 100%;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    text-align: center;
+    line-height: 30px;
+}
+
+.product-card {
+    transition: all 0.3s;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .1);
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, .15);
+}

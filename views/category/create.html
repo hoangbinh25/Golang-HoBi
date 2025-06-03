@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản lý Sản phẩm - Admin Products</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/admin.css">
+  <script src="/assets/js/formatVND/formatVND.js"></script>
+</head>
+
+<body>
+
+  <div id="wrapper">
+    <!-- Sidebar -->
+    <div id="sidebar">
+      <div class="sidebar-brand">
+        <h4 class="mb-0"><i class="fas fa-store me-2"></i> Shop Admin</h4>
+      </div>
+      <div class="py-2">
+        <a href="/admin" class="text-decoration-none text-white">
+          <div class="sidebar-item active">
+            <i class="fas fa-tachometer-alt"></i> Dashboard
+          </div>
+        </a>
+        <a href="/admin/products" class="text-decoration-none text-white">
+          <div class="sidebar-item">
+            <i class="fas fa-shopping-bag"></i> Sản phẩm
+          </div>
+        </a>
+        <a href="/admin/categories" class="text-decoration-none text-white">
+          <div class="sidebar-item">
+            <i class="fas fa-tags"></i> Danh mục
+          </div>
+        </a>
+        <a href="/admin/orders" class="text-decoration-none text-white">
+          <div class="sidebar-item">
+            <i class="fas fa-shopping-cart"></i> Đơn hàng
+            <a href="/admin" class="text-decoration-none text-white">
+            </a>
+          </div>
+          <div class="sidebar-item">
+            <i class="fas fa-users"></i> Khách hàng
+          </div>
+          <a href="/admin" class="text-decoration-none text-white">
+          </a>
+          <div class="sidebar-item">
+            <i class="fas fa-percent"></i> Khuyến mãi
+          </div>
+        </a>
+        <a href="/admin" class="text-decoration-none text-white">
+          <div class="sidebar-item">
+            <i class="fas fa-chart-bar"></i> Báo cáo
+          </div>
+        </a>
+        <a href="/admin" class="text-decoration-none text-white">
+          <div class="sidebar-item">
+            <i class="fas fa-cog"></i> Cài đặt
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper">
+      <!-- Topbar -->
+      <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+        <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+          <i class="fa fa-bars"></i>
+        </button>
+        <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+          <div class="input-group">
+            <input type="text" class="form-control bg-light border-0 small" placeholder="Tìm kiếm..."
+              aria-label="Search" aria-describedby="basic-addon2">
+            <div class="input-group-append">
+              <button class="btn btn-primary" type="button">
+                <i class="fas fa-search fa-sm"></i>
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item dropdown no-arrow mx-1">
+            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              <i class="fas fa-bell fa-fw"></i>
+              <span class="badge bg-danger badge-counter">3+</span>
+            </a>
+          </li>
+          <li class="nav-item dropdown no-arrow mx-1">
+            <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              <i class="fas fa-envelope fa-fw"></i>
+              <span class="badge bg-danger badge-counter">7</span>
+            </a>
+          </li>
+          <div class="topbar-divider d-none d-sm-block"></div>
+          <li class="nav-item dropdown no-arrow">
+            <div class="btn-group">
+              <button class="btn btn-secondary btn-sm dropdown-toggle m-2" type="button" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                Admin
+              </button>
+              <ul class="dropdown-menu">
+                <li onclick="window.location.href='/logout'">
+                  Đăng xuất
+                </li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Content -->
+      <!-- Danh sách Category -->
+      <div class="product-form m-4">
+        <h3>Create Category </h3>
+        <form method="POST" action="/admin/categories/create" enctype="multipart/form-data">
+          <div class="row mb-3">
+            <input type="hidden" name="categoryId" class="form-control" id="categoryId"
+              value="{{ .category.ProductId }}">
+
+            <div class="col-md-6">
+              <label for="categoryName" class="form-label">Category Name</label>
+              <input type="text" name="categoryName" class="form-control" id="categoryName" placeholder="Type name here"
+                value="{{ .category.Name }}" required>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="uploadImage" class="form-label">Upload Image</label>
+              <input type="file" class="form-control" id="uploadImage" name="uploadImage" accept="image/*"
+                onchange="PreviewImage(event)">
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Preview</label>
+              <img id="previewImage" src="/{{ .category.Image }}" alt="Image Preview" class="img-thumbnail"
+                style="max-width: 200px" {{if not .category.Image}}{{end}}>
+            </div>
+          </div>
+
+
+          <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary me-2">EDIT</button>
+            <a href="/admin/categories">
+              <button type="button" class="btn btn-secondary">CANCEL</button>
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <script src="/assets/js/products/addProduct.js"></script>
+
+</body>
+
+</html>

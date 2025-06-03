@@ -1,0 +1,38 @@
+:root {
+    --primary-color: #ee4d2d;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    font-family: "Poppins", sans-serif;
+}
+
+header {
+    background-color: var(--primary-color);
+}
+
+i {
+    color: #fff;
+}
+
+a {
+    text-decoration: none;
+    color: #000;
+}
+
+a:hover {
+    color: var(--primary-color);
+}
+
+li {
+    list-style-type: none;
+}
+
+.mt-10 {
+    margin-top: 100px;
+}
