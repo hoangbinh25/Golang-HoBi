@@ -208,23 +208,20 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {{ range .products }}
+                                    {{ range .orders }}
                                     <tr>
-                                        <td># {{ .ProductId }}</td>
-                                        <td><img src="/{{ .Image }}" alt="Sản phẩm 1"></td>
-                                        <td>{{ .Name }}</td>
-                                        <td>{{ .Category.Name }}</td>
-                                        <td class="vnd">{{ .Price }}</td>
-                                        <td>{{ .Quantity }}</td>
-                                        <td><span class="badge bg-success">Đang bán</span></td>
+                                        <td class="text-center"># {{ .IdOrder }}</td>
+                                        <td class="text-center">{{ .Username }}</td>
+                                        <td class="text-center">{{ .FormattedOrderDate }}</td>
+                                        <td class="text-center" class="vnd">{{ .TotalAmount }}</td>
+                                        <td class="text-center">
+                                            <span class="badge bg-success">{{ .Status }}</span></td>
+                                        <td class="text-center"><span class="badge bg-success">{{ .Status }}</span></td>
                                         <td>
-                                            <a href="/admin/products/update?id={{ .ProductId }}"
-                                                class=" btn btn-sm btn-primary btn-circle text-white">
+                                            <a href="" class=" btn btn-sm btn-primary btn-circle text-white">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-
-                                            <button class="btn btn-sm btn-danger btn-circle"
-                                                onclick="confirmDelete(`{{ .ProductId }}`)"><i
+                                            <button class="btn btn-sm btn-danger btn-circle"><i
                                                     class="fas fa-trash"></i></button>
                                             <button class="btn btn-sm btn-info btn-circle"><i
                                                     class="fas fa-eye"></i></button>

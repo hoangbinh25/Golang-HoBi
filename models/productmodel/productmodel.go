@@ -4,12 +4,27 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/Golang-Shoppe/initializers"
-	"github.com/Golang-Shoppe/models"
+	"github.com/Golang-Shoppe/models/categorymodel"
 )
 
-func GetAll() []models.Product {
+type Product struct {
+	ProductId    uint
+	Name         string
+	Description  string
+	OldPrice     int64
+	Price        int64
+	Image        string
+	Quantity     int
+	SoldQuantity int
+	Category     categorymodel.Category
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
+}
+
+func GetAll() []Product {
 	rows, err := initializers.DB.Query(`
 	SELECT 
 		products.product_id,
@@ -30,10 +45,10 @@ func GetAll() []models.Product {
 	}
 
 	defer rows.Close()
-	var products []models.Product
+	var products []Product
 
 	for rows.Next() {
-		var product models.Product
+		var product Product
 		err := rows.Scan(
 			&product.ProductId,
 			&product.Name,
@@ -57,8 +72,8 @@ func GetAll() []models.Product {
 	return products
 }
 
-func GetByID(id int) (models.Product, error) {
-	var product models.Product
+func GetByID(id int) (Product, error) {
+	var product Product
 
 	// Thực hiện truy vấn lấy thông tin sản phẩm
 	row := initializers.DB.QueryRow(`
@@ -92,7 +107,7 @@ func GetByID(id int) (models.Product, error) {
 	return product, nil
 }
 
-func Create(product models.Product) bool {
+func Create(product Product) bool {
 	result, err := initializers.DB.Exec(`
 	INSERT INTO products
 	(
@@ -129,7 +144,7 @@ func Create(product models.Product) bool {
 	return lastInsertId > 0
 }
 
-func Detail(id int) models.Product {
+func Detail(id int) Product {
 	row := initializers.DB.QueryRow(`
 	SELECT 
 		products.product_id,
@@ -146,7 +161,7 @@ func Detail(id int) models.Product {
 	FROM products
 	JOIN categories ON products.idCategory = categories.id`)
 
-	var product models.Product
+	var product Product
 	err := row.Scan(
 		&product.ProductId,
 		&product.Name,
@@ -164,7 +179,7 @@ func Detail(id int) models.Product {
 	return product
 }
 
-func Update(id int, product models.Product) bool {
+func Update(id int, product Product) bool {
 	result, err := initializers.DB.Exec(`UPDATE products SET
 	name = ?,
 	description = ?,
@@ -220,4 +235,51 @@ func Delete(id int) bool {
 	log.Println("Product deleted successfully, ID: ", id)
 
 	return true
+}
+
+func GetProductsByCategory(cateId int) ([]Product, error) {
+	rows, err := initializers.DB.Query(`
+	SELECT 	product_id, 
+			name, 
+			description, 
+			price, 
+			image, 
+			quantity, 
+			sold_quantity, 
+			idCategory 
+		FROM products 
+		WHERE idCategory = ?`, cateId)
+	if err != nil {
+		fmt.Println("Not found Category.Id")
+		return nil, err
+	}
+	defer rows.Close()
+
+	var products []Product
+
+	for rows.Next() {
+		var p Product
+		p.Category = categorymodel.Category{}
+		err := rows.Scan(
+			&p.ProductId,
+			&p.Name,
+			&p.Description,
+			&p.Price,
+			&p.Image,
+			&p.Quantity,
+			&p.SoldQuantity,
+			&p.Category.Id)
+		if err != nil {
+			fmt.Println("Error when scan: ", err)
+			return nil, err
+		}
+
+		products = append(products, p)
+	}
+	return products, nil
+
+}
+
+func (p Product) InStock() int {
+	return p.Quantity - p.SoldQuantity
 }

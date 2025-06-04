@@ -5,6 +5,7 @@ import (
 
 	"github.com/Golang-Shoppe/controllers/admincontroller"
 	cartcontroller "github.com/Golang-Shoppe/controllers/cartController"
+	categorycontroller "github.com/Golang-Shoppe/controllers/categoryController"
 	checkoutcontroller "github.com/Golang-Shoppe/controllers/checkoutController"
 	"github.com/Golang-Shoppe/controllers/oauth"
 )
@@ -83,5 +84,7 @@ func InitializersRoutes() {
 	// Checkout
 	http.HandleFunc("/checkout", checkoutcontroller.ShowCheckoutPage)
 	http.HandleFunc("/checkout/submit", checkoutcontroller.CheckOutCartHandle)
+
+	http.HandleFunc("/category", categorycontroller.ShowProductsCategory)
 
 }

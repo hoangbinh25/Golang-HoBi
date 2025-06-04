@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"github.com/Golang-Shoppe/initializers"
-	"github.com/Golang-Shoppe/models"
 	"github.com/Golang-Shoppe/models/categorymodel"
 	"github.com/Golang-Shoppe/models/productmodel"
 )
@@ -133,14 +132,14 @@ func CreateProduct(w http.ResponseWriter, r *http.Request) {
 		log.Println("Image saved successfully", imagePath)
 
 		// Tạo sản phẩm
-		product := models.Product{
+		product := productmodel.Product{
 			Name:        name,
 			Description: description,
 			OldPrice:    oldPrice,
 			Price:       price,
 			Image:       imagePath,
 			Quantity:    quantity,
-			Category:    models.Category{Id: uint(categoryId)},
+			Category:    categorymodel.Category{Id: uint(categoryId)},
 			CreatedAt:   currentTime,
 			UpdatedAt:   currentTime,
 		}
@@ -228,7 +227,7 @@ func UpdateProduct(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Cập nhật sản phẩm
-		product := models.Product{
+		product := productmodel.Product{
 			ProductId:   uint(id),
 			Name:        name,
 			Description: description,
@@ -244,7 +243,7 @@ func UpdateProduct(w http.ResponseWriter, r *http.Request) {
 
 		if categoryStr != "" {
 			categoryId, _ := strconv.Atoi(categoryStr)
-			product.Category = models.Category{Id: uint(categoryId)}
+			product.Category = categorymodel.Category{Id: uint(categoryId)}
 		}
 
 		if productmodel.Update(int(product.ProductId), product) {

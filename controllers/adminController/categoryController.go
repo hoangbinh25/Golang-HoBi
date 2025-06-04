@@ -10,7 +10,6 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/Golang-Shoppe/models"
 	"github.com/Golang-Shoppe/models/categorymodel"
 )
 
@@ -85,7 +84,7 @@ func CreateCategory(w http.ResponseWriter, r *http.Request) {
 		}
 		log.Println("Image saved successfully", imagePath)
 
-		category := models.Category{
+		category := categorymodel.Category{
 			Name:     categoryName,
 			Image:    &imagePath,
 			CreateAt: currentTime,
@@ -148,7 +147,7 @@ func UpdateCategory(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
-		category := models.Category{
+		category := categorymodel.Category{
 			Id:       uint(id),
 			Name:     Name,
 			UpdateAt: time.Now(),

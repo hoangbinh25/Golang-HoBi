@@ -206,8 +206,9 @@
         <div class="row cate-product">
           {{ range .categories }}
           <div class="col-6 col-sm-4 col-md-3 col-lg-2 text-center mb-4">
-            <a href="#" class="text-decoration-none">
+            <a href="/category?id={{ .Id }}" class="text-decoration-none">
               <div class="bg-product">
+                <input type="hidden" class="idCategory" value="{{ .Id }}">
                 <img src="/{{ .Image }}" alt="{{ .Name }}" width="80px" height="80px">
                 <div class="title-product mt-2">{{ .Name }}</div>
               </div>

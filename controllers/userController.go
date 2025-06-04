@@ -98,7 +98,7 @@ func LoginAuthHandler(w http.ResponseWriter, r *http.Request) {
 
 		session.Options = &sessions.Options{
 			Path:     "/",
-			MaxAge:   300,  // Second
+			MaxAge:   3000, // Second
 			HttpOnly: true, // Cookie only http
 			SameSite: http.SameSiteLaxMode,
 		}
