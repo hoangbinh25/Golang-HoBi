@@ -3,7 +3,7 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/Golang-Shoppe/controllers/admincontroller"
+	admincontroller "github.com/Golang-Shoppe/controllers/adminController"
 	cartcontroller "github.com/Golang-Shoppe/controllers/cartController"
 	categorycontroller "github.com/Golang-Shoppe/controllers/categoryController"
 	checkoutcontroller "github.com/Golang-Shoppe/controllers/checkoutController"
