@@ -1,66 +1,61 @@
 package initializers
 
 import (
-	"crypto/tls"
-	"crypto/x509"
+	"context"
 	"database/sql"
 	"fmt"
-	"io/ioutil"
 	"log"
+	"net/http"
 	"os"
+	"time"
 
-	"github.com/go-sql-driver/mysql"
 	_ "github.com/go-sql-driver/mysql"
 )
 
 var DB *sql.DB
 
 func ConnectDatabase() {
-
-	rootCertPool := x509.NewCertPool()
-	pem, err := ioutil.ReadFile("./certs/ca.pem") // File từ Aiven
-	if err != nil {
-		log.Fatal("Failed to read CA cert:", err)
-	}
-	if ok := rootCertPool.AppendCertsFromPEM(pem); !ok {
-		log.Fatal("Failed to append CA cert")
-	}
-
-	err = mysql.RegisterTLSConfig("custom", &tls.Config{
-		RootCAs:            rootCertPool,
-		InsecureSkipVerify: true,
-	})
-	if err != nil {
-		log.Fatal("Failed to register TLS config:", err)
-	}
-
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080" // fallback port
-	}
-
-	// Connect to database
-	dsn := os.Getenv("DB_DSN")
+	dsn := os.Getenv("DATABASE_URL")
 	if dsn == "" {
-		log.Println("⚠️ DB_DSN not found, using fallback local DSN")
+		log.Fatal("DATABASE_URL environment variable is required")
 	}
-	log.Println("Using DSN:", dsn)
+
+	log.Println("Connecting to database...")
 
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {
 		log.Fatal("Failed to open database:", err)
 	}
 
+	// Cấu hình connection pool
+	db.SetMaxOpenConns(10)
+	db.SetMaxIdleConns(5)
+	db.SetConnMaxLifetime(time.Hour)
+
+	// Test connection với timeout
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	err = db.PingContext(ctx)
 	if err != nil {
-		fmt.Println(err.Error())
-	} else {
-		fmt.Println("Database connected")
+		log.Fatal("Database ping failed:", err)
 	}
 
-	err = db.Ping()
-	if err != nil {
-		fmt.Println("Database is not connected")
-		fmt.Println(err.Error())
-	}
+	log.Println("Database connected successfully")
 	DB = db
+}
+
+func HealthCheck(w http.ResponseWriter, r *http.Request) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	err := DB.PingContext(ctx)
+	if err != nil {
+		w.WriteHeader(http.StatusServiceUnavailable)
+		fmt.Fprintf(w, "Database connection failed: %v", err)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprintf(w, "OK - Database connected")
 }

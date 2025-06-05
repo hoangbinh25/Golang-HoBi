@@ -18,10 +18,15 @@ func main() {
 
 	// Khởi động server
 	log.Println("Server started at http://localhost:8080")
+	// Get port from environment
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
 	}
+
+	// Listen trên 0.0.0.0 - QUAN TRỌNG cho Render
+	address := "0.0.0.0:" + port
+	log.Printf("Server starting on %s", address)
 	if err := http.ListenAndServe(":"+port, nil); err != nil {
 		log.Fatal("Server error: ", err)
 	}

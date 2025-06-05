@@ -8,6 +8,7 @@ import (
 	categorycontroller "github.com/Golang-Shoppe/controllers/categoryController"
 	checkoutcontroller "github.com/Golang-Shoppe/controllers/checkoutController"
 	"github.com/Golang-Shoppe/controllers/oauth"
+	"github.com/Golang-Shoppe/initializers"
 )
 
 func InitializersRoutes() {
@@ -35,6 +36,8 @@ func InitializersRoutes() {
 		w.Header().Set("Content-Type", "text/css")
 		http.ServeFile(w, r, "assets/css/common.css")
 	})
+
+	http.HandleFunc("/health", initializers.HealthCheck)
 
 	// admin routes
 	// Categories
