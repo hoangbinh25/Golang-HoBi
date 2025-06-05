@@ -1,4 +1,3 @@
-
 CREATE TABLE orders (
     id INT PRIMARY KEY AUTO_INCREMENT,
     idUser INT NOT NULL,
