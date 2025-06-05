@@ -15,9 +15,9 @@ import (
 var DB *sql.DB
 
 func ConnectDatabase() {
-	dsn := os.Getenv("DATABASE_URL")
+	dsn := os.Getenv("DB_DSN")
 	if dsn == "" {
-		log.Fatal("DATABASE_URL environment variable is required")
+		log.Fatal("DB_DSN environment variable is required")
 	}
 
 	log.Println("Connecting to database...")
