@@ -34,11 +34,15 @@ func ConnectDatabase() {
 		log.Fatal("Failed to register TLS config:", err)
 	}
 
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080" // fallback port
+	}
+
 	// Connect to database
 	dsn := os.Getenv("DB_DSN")
 	if dsn == "" {
 		log.Println("⚠️ DB_DSN not found, using fallback local DSN")
-		dsn = "root:123456@tcp(localhost:3306)/go_ecommerce?parseTime=true"
 	}
 	log.Println("Using DSN:", dsn)
 
