@@ -3,6 +3,7 @@ package cartcontroller
 import (
 	"log"
 	"net/http"
+	"runtime"
 	"strconv"
 	"text/template"
 
@@ -58,7 +59,7 @@ func ViewCartHandler(w http.ResponseWriter, r *http.Request) {
 		var name, image string
 		var price int64
 		var product_id, stock, sold, cartQuantity int
-		rows.Scan(&product_id, &name, &image, &price, &stock, &sold, &cartQuantity)
+		err := rows.Scan(&product_id, &name, &image, &price, &stock, &sold, &cartQuantity)
 		cart = append(cart, map[string]any{
 			"product_id": product_id,
 			"name":       name,
@@ -68,6 +69,10 @@ func ViewCartHandler(w http.ResponseWriter, r *http.Request) {
 			"sold":       sold,
 			"quantity":   cartQuantity,
 		})
+		if err != nil {
+			_, file, line, _ := runtime.Caller(1)
+			log.Printf("[ERROR] %s:%d %v\n", file, line, err)
+		}
 	}
 
 	// Truyền vào template

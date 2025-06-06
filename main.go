@@ -8,9 +8,15 @@ import (
 	controllers "github.com/Golang-Shoppe/controllers"
 	initializers "github.com/Golang-Shoppe/initializers"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/joho/godotenv"
 )
 
 func main() {
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Printf("[ERROR] load env: %v", err)
+	}
+
 	initializers.InitOAuth()
 	initializers.ConnectDatabase()
 	controllers.InitParseFiles()

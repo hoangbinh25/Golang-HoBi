@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -15,10 +14,12 @@ import (
 var DB *sql.DB
 
 func ConnectDatabase() {
-	dsn := os.Getenv("DB_DSN")
-	if dsn == "" {
-		log.Fatal("DB_DSN environment variable is required")
-	}
+	// dsn := os.Getenv("DATABASE_URL")
+	// if dsn == "" {
+	// 	log.Fatal("DB_DSN environment variable is required")
+	// }
+
+	dsn := "root:123456@tcp(localhost:3306)/go_ecommerce?parseTime=true"
 
 	log.Println("Connecting to database...")
 

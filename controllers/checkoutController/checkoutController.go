@@ -3,7 +3,9 @@ package checkoutcontroller
 import (
 	"fmt"
 	"html/template"
+	"log"
 	"net/http"
+	"runtime"
 
 	"github.com/Golang-Shoppe/controllers/utils"
 	"github.com/Golang-Shoppe/initializers"
@@ -46,8 +48,11 @@ func ShowCheckoutPage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	rows, err := initializers.DB.Query(`
-		SELECT p.product_id,
-		p.name, p.image, p.price, 
+		SELECT 
+		p.product_id,
+		p.name,
+		p.image,
+		p.price, 
 		p.quantity AS stock,
 		p.sold_quantity AS sold,
 		c.quantity
@@ -70,7 +75,20 @@ func ShowCheckoutPage(w http.ResponseWriter, r *http.Request) {
 		var price int64
 		var product_id, stock, sold, cartQuantity int
 
-		rows.Scan(&product_id, &name, &image, &price, &stock, &sold, &cartQuantity)
+		err := rows.Scan(
+			&product_id,
+			&name,
+			&image,
+			&price,
+			&stock,
+			&sold,
+			&cartQuantity)
+
+		if err != nil {
+			_, file, line, _ := runtime.Caller(1)
+			log.Printf("[ERROR] %s:%d %v\n", file, line, err)
+		}
+
 		itemTotal := price * int64(cartQuantity)
 
 		total += itemTotal
@@ -120,7 +138,10 @@ func CheckOutCartHandle(w http.ResponseWriter, r *http.Request) {
 
 	// Lấy giỏ hàng
 	rows, err := initializers.DB.Query(`
-		SELECT product_id, quantity, price 
+		SELECT 
+			product_id,
+			quantity,
+			price 
 		FROM cart_items 
 		WHERE idUser = ?`, idUser)
 	if err != nil {
