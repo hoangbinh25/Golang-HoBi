@@ -1,1 +1,17 @@
 .env
+# Build & binary files
+main
+main.exe
+*.exe
+*.out
+
+# Log files
+*.log
+tmp/
+
+# User uploads
+assets/uploads/
+
+# System files
+.DS_Store
+Thumbs.db
