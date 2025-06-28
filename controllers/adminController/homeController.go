@@ -6,7 +6,7 @@ import (
 )
 
 func AdminHomeHandler(w http.ResponseWriter, r *http.Request) {
-	temp, err := template.ParseFiles("views/admin.html")
+	temp, err := template.ParseFiles("views/admin/admin.html")
 	if err != nil {
 		panic(err)
 	}
