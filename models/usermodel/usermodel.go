@@ -1,6 +1,7 @@
 package usermodel
 
 import (
+	"crypto/rand"
 	"database/sql"
 	"fmt"
 	"log"
@@ -21,10 +22,11 @@ func GetById(id int) (models.User, error) {
 		email,
 		address,  
 		phone,
-		gender
+		gender,
+		email_verified
 	FROM users
 	WHERE idUser = ?`, id)
-	err := row.Scan(&user.IdUser, &user.Username, &user.Password, &user.Name, &user.Email, &user.Address, &user.Phone, &user.Gender)
+	err := row.Scan(&user.IdUser, &user.Username, &user.Password, &user.Name, &user.Email, &user.Address, &user.Phone, &user.Gender, &user.EmailVerified)
 	if err != nil {
 		log.Println("Error when fetching user: ", err)
 		return user, err
@@ -99,7 +101,8 @@ func FindUserByEmail(email string) (*models.User, error) {
 		gender,
 		createAt,
 		updateAt,
-		role
+		role,
+		email_verified
 	FROM users WHERE email = ?`, email)
 
 	err := row.Scan(
@@ -113,7 +116,8 @@ func FindUserByEmail(email string) (*models.User, error) {
 		&user.Gender,
 		&user.CreateAt,
 		&user.UpdateAt,
-		&user.Role)
+		&user.Role,
+		&user.EmailVerified)
 	if err == sql.ErrNoRows {
 		return nil, nil // không có user
 	} else if err != nil {
@@ -127,10 +131,32 @@ func CreateUserFromGoogle(u *models.User) error {
 	u.CreateAt = &now
 	u.UpdateAt = &now
 
-	_, err := initializers.DB.Exec(`INSERT INTO users (username, name, password, email, address, phone, gender, createAt, updateAt, role) 
-	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-		u.Username, u.Name, u.Password, u.Email, u.Address, u.Phone, u.Gender, u.CreateAt, u.UpdateAt, u.Role)
+	_, err := initializers.DB.Exec(`INSERT INTO users (username, name, password, email, address, phone, gender, createAt, updateAt, role, email_verified) 
+	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+		u.Username, u.Name, u.Password, u.Email, u.Address, u.Phone, u.Gender, u.CreateAt, u.UpdateAt, u.Role, true)
 
+	return err
+}
+
+func CreateUser(u *models.User) error {
+	now := time.Now()
+	u.CreateAt = &now
+	u.UpdateAt = &now
+
+	_, err := initializers.DB.Exec(`INSERT INTO users (username, name, password, email, address, phone, gender, createAt, updateAt, role, email_verified) 
+	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+		u.Username, u.Name, u.Password, u.Email, u.Address, u.Phone, u.Gender, u.CreateAt, u.UpdateAt, u.Role, false)
+
+	return err
+}
+
+func UpdateEmailVerified(id int) error {
+	_, err := initializers.DB.Exec(`UPDATE users SET email_verified = TRUE WHERE idUser = ?`, id)
+	return err
+}
+
+func UpdatePasswordByEmail(email, newPassword string) error {
+	_, err := initializers.DB.Exec(`UPDATE users SET password = ? WHERE email = ?`, newPassword, email)
 	return err
 }
 
@@ -159,4 +185,68 @@ func CalculateCartTotal(idUser int) int64 {
 	}
 
 	return total
+}
+
+// Email Verification functions
+func CreateEmailVerification(email, tokenType string) (*models.EmailVerification, error) {
+	token := generateToken()
+	expiresAt := time.Now().Add(24 * time.Hour) // Token hết hạn sau 24 giờ
+
+	verification := &models.EmailVerification{
+		Email:     email,
+		Token:     token,
+		Type:      tokenType,
+		ExpiresAt: expiresAt,
+		CreatedAt: time.Now(),
+		Used:      false,
+	}
+
+	_, err := initializers.DB.Exec(`
+		INSERT INTO email_verifications (email, token, type, expires_at, created_at, used)
+		VALUES (?, ?, ?, ?, ?, ?)
+	`, verification.Email, verification.Token, verification.Type, verification.ExpiresAt, verification.CreatedAt, verification.Used)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return verification, nil
+}
+
+func GetEmailVerificationByToken(token string) (*models.EmailVerification, error) {
+	var verification models.EmailVerification
+	row := initializers.DB.QueryRow(`
+		SELECT id, email, token, type, expires_at, created_at, used
+		FROM email_verifications
+		WHERE token = ?
+	`, token)
+
+	err := row.Scan(&verification.ID, &verification.Email, &verification.Token, &verification.Type, &verification.ExpiresAt, &verification.CreatedAt, &verification.Used)
+	if err == sql.ErrNoRows {
+		return nil, nil
+	} else if err != nil {
+		return nil, err
+	}
+
+	return &verification, nil
+}
+
+func MarkEmailVerificationAsUsed(token string) error {
+	_, err := initializers.DB.Exec(`
+		UPDATE email_verifications SET used = TRUE WHERE token = ?
+	`, token)
+	return err
+}
+
+func DeleteExpiredEmailVerifications() error {
+	_, err := initializers.DB.Exec(`
+		DELETE FROM email_verifications WHERE expires_at < NOW()
+	`)
+	return err
+}
+
+func generateToken() string {
+	b := make([]byte, 32)
+	rand.Read(b)
+	return fmt.Sprintf("%x", b)
 }

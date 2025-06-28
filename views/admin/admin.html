@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản lý Sản phẩm - Admin Dashboard</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/admin.css">
+</head>
+
+<body>
+
+  <div id="wrapper">
+    <!-- Sidebar -->
+    <div id="sidebar">
+      <div class="sidebar-brand">
+        <h4 class="mb-0"><i class="fas fa-store me-2"></i> Shop Admin</h4>
+      </div>
+      <div class="py-2">
+        <a href="/admin" class="text-decoration-none text-white ">
+          <div class="sidebar-item active">
+            <i class="fas fa-tachometer-alt"></i> Dashboard
+          </div>
+        </a>
+        <a href="/admin/products" class="text-decoration-none text-white ">
+          <div class="sidebar-item">
+            <i class="fas fa-shopping-bag"></i> Sản phẩm
+          </div>
+        </a>
+        <a href="/admin/categories" class="text-decoration-none text-white">
+          <div class="sidebar-item">
+            <i class="fas fa-tags"></i> Danh mục
+          </div>
+        </a>
+        <a href="/admin/orders" class="text-decoration-none text-white">
+          <div class="sidebar-item">
+            <i class="fas fa-shopping-cart"></i> Đơn hàng
+          </div>
+        </a>
+        <a href="" class="text-decoration-none text-white">
+          <div class="sidebar-item">
+            <i class="fas fa-users"></i> Khách hàng
+          </div>
+        </a>
+        <a href="" class="text-decoration-none text-white">
+          <div class="sidebar-item">
+            <i class="fas fa-percent"></i> Khuyến mãi
+          </div>
+        </a>
+        <a href="" class="text-decoration-none text-white">
+          <div class="sidebar-item">
+            <i class="fas fa-chart-bar"></i> Báo cáo
+          </div>
+        </a>
+        <a href="" class="text-decoration-none text-white">
+          <div class="sidebar-item">
+            <i class="fas fa-cog"></i> Cài đặt
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper">
+      <!-- Topbar -->
+      <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+        <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+          <i class="fa fa-bars"></i>
+        </button>
+        <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+          <div class="input-group">
+            <input type="text" class="form-control bg-light border-0 small" placeholder="Tìm kiếm..."
+              aria-label="Search" aria-describedby="basic-addon2">
+            <div class="input-group-append">
+              <button class="btn btn-primary" type="button">
+                <i class="fas fa-search fa-sm"></i>
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item dropdown no-arrow mx-1">
+            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              <i class="fas fa-bell fa-fw"></i>
+              <span class="badge bg-danger badge-counter">3+</span>
+            </a>
+          </li>
+          <li class="nav-item dropdown no-arrow mx-1">
+            <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              <i class="fas fa-envelope fa-fw"></i>
+              <span class="badge bg-danger badge-counter">7</span>
+            </a>
+          </li>
+          <div class="topbar-divider d-none d-sm-block"></div>
+          <li class="nav-item dropdown no-arrow">
+            <div class="btn-group">
+              <button class="btn btn-secondary btn-sm dropdown-toggle m-2" type="button" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                Admin
+              </button>
+              <ul class="dropdown-menu">
+                <li onclick="window.location.href='/logout'">
+                  Đăng xuất
+                </li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Content -->
+      <div class="content">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+          <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+            <i class="fas fa-download fa-sm text-white-50 me-1"></i> Tạo báo cáo
+          </a>
+        </div>
+
+        <!-- Dashboard Cards -->
+        <div class="row">
+          <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card card-dashboard primary h-100 py-2">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <div class="card-title mb-1">Sản phẩm</div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800">243</div>
+                  </div>
+                  <div class="col-auto">
+                    <i class="fas fa-cube fa-2x text-gray-300"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card card-dashboard success h-100 py-2">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <div class="card-title mb-1">Doanh thu</div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800">348.500.000đ</div>
+                  </div>
+                  <div class="col-auto">
+                    <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card card-dashboard info h-100 py-2">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <div class="card-title mb-1">Đơn hàng</div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800">156</div>
+                  </div>
+                  <div class="col-auto">
+                    <i class="fas fa-shopping-cart fa-2x text-gray-300"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card card-dashboard warning h-100 py-2">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <div class="card-title mb-1">Khách hàng</div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800">1,287</div>
+                  </div>
+                  <div class="col-auto">
+                    <i class="fas fa-users fa-2x text-gray-300"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Products Section -->
+        <div class="card shadow mb-4">
+          <div class="card-header py-3 d-flex justify-content-between align-items-center">
+            <h6 class="m-0 font-weight-bold text-primary">Sản phẩm nổi bật</h6>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div class="card product-card h-100">
+                  <div class="position-relative">
+                    <img class="card-img-top" src="/api/placeholder/400/250" alt="Sản phẩm 1">
+                    <span class="badge bg-success position-absolute top-0 end-0 m-2">Còn hàng</span>
+                  </div>
+                  <div class="card-body">
+                    <h5 class="card-title">iPhone 15 Pro Max</h5>
+                    <p class="card-text text-danger fw-bold">32.990.000đ</p>
+                    <p class="text-muted small">Đã bán: 124</p>
+                    <div class="d-flex justify-content-between">
+                      <button class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></button>
+                      <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                      <button class="btn btn-sm btn-success"><i class="fas fa-eye"></i></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div class="card product-card h-100">
+                  <div class="position-relative">
+                    <img class="card-img-top" src="/api/placeholder/400/250" alt="Sản phẩm 2">
+                    <span class="badge bg-success position-absolute top-0 end-0 m-2">Còn hàng</span>
+                  </div>
+                  <div class="card-body">
+                    <h5 class="card-title">Samsung Galaxy S24 Ultra</h5>
+                    <p class="card-text text-danger fw-bold">29.990.000đ</p>
+                    <p class="text-muted small">Đã bán: 98</p>
+                    <div class="d-flex justify-content-between">
+                      <button class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></button>
+                      <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                      <button class="btn btn-sm btn-success"><i class="fas fa-eye"></i></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div class="card product-card h-100">
+                  <div class="position-relative">
+                    <img class="card-img-top" src="/api/placeholder/400/250" alt="Sản phẩm 3">
+                    <span class="badge bg-warning position-absolute top-0 end-0 m-2">Sắp hết</span>
+                  </div>
+                  <div class="card-body">
+                    <h5 class="card-title">MacBook Pro M3</h5>
+                    <p class="card-text text-danger fw-bold">45.990.000đ</p>
+                    <p class="text-muted small">Đã bán: 67</p>
+                    <div class="d-flex justify-content-between">
+                      <button class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></button>
+                      <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                      <button class="btn btn-sm btn-success"><i class="fas fa-eye"></i></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div class="card product-card h-100">
+                  <div class="position-relative">
+                    <img class="card-img-top" src="/api/placeholder/400/250" alt="Sản phẩm 4">
+                    <span class="badge bg-danger position-absolute top-0 end-0 m-2">Hết hàng</span>
+                  </div>
+                  <div class="card-body">
+                    <h5 class="card-title">iPad Pro 12.9</h5>
+                    <p class="card-text text-danger fw-bold">25.990.000đ</p>
+                    <p class="text-muted small">Đã bán: 53</p>
+                    <div class="d-flex justify-content-between">
+                      <button class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></button>
+                      <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                      <button class="btn btn-sm btn-success"><i class="fas fa-eye"></i></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product Table -->
+        <!-- <div class="card shadow mb-4">
+          <div class="card-header py-3 d-flex justify-content-between align-items-center">
+            <h6 class="m-0 font-weight-bold text-primary">Danh sách sản phẩm</h6>
+            <div class="d-flex align-items-center">
+              <div class="input-group me-3" style="width: 250px;">
+                <input type="text" class="form-control" placeholder="Tìm sản phẩm...">
+                <button class="btn btn-primary" type="button"><i class="fas fa-search"></i></button>
+              </div>
+              <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                  data-bs-toggle="dropdown" aria-expanded="false">
+                  Lọc
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <li><a class="dropdown-item" href="#">Tất cả sản phẩm</a></li>
+                  <li><a class="dropdown-item" href="#">Còn hàng</a></li>
+                  <li><a class="dropdown-item" href="#">Hết hàng</a></li>
+                  <li><a class="dropdown-item" href="#">Mới nhất</a></li>
+                  <li><a class="dropdown-item" href="#">Bán chạy nhất</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-bordered table-product" width="100%" cellspacing="0">
+                <thead>
+                  <tr>
+                    <th style="width: 50px;">ID</th>
+                    <th style="width: 80px;">Hình ảnh</th>
+                    <th>Tên sản phẩm</th>
+                    <th>Danh mục</th>
+                    <th>Giá</th>
+                    <th>Tồn kho</th>
+                    <th>Trạng thái</th>
+                    <th style="width: 120px;">Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody>
+                 
+                </tbody>
+              </table>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mt-3">
+              <div>Hiển thị 1-5 của 243 sản phẩm</div>
+              <nav aria-label="Phân trang">
+                <ul class="pagination mb-0">
+                  <li class="page-item disabled">
+                    <a class="page-link" href="#" aria-label="Previous">
+                      <span aria-hidden="true">&laquo;</span>
+                    </a>
+                  </li>
+                  <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                  <li class="page-item"><a class="page-link" href="#">2</a></li>
+                  <li class="page-item"><a class="page-link" href="#">3</a></li>
+                  <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Next">
+                      <span aria-hidden="true">&raquo;</span>
+                    </a>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+        </div> -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Simple JS to toggle the sidebar
+    document.addEventListener('DOMContentLoaded', function () {
+      // Add active class to sidebar items on click
+      const sidebarItems = document.querySelectorAll('.sidebar-item');
+      sidebarItems.forEach(item => {
+        item.addEventListener('click', function () {
+          sidebarItems.forEach(i => i.classList.remove('active'));
+          this.classList.add('active');
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>

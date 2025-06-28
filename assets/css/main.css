@@ -384,3 +384,86 @@ a:hover>.contact-footer {
   line-height: 1.4em;          /* Độ cao mỗi dòng */
   max-height: 2.8em;           /* 1.4em * 2 dòng */
 }
+
+/* Orders page styles */
+.orders-container {
+    max-width: 100%;
+}
+
+.order-card {
+    background: #fff;
+    transition: all 0.3s ease;
+}
+
+.order-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.order-header h6 {
+    color: #333;
+    font-weight: 600;
+}
+
+.order-items {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.order-item {
+    transition: background-color 0.2s ease;
+}
+
+.order-item:hover {
+    background-color: #f8f9fa;
+}
+
+.order-item:last-child {
+    border-bottom: none !important;
+}
+
+.order-footer {
+    background-color: #f8f9fa;
+    margin: 0 -1rem -1rem -1rem;
+    padding: 1rem !important;
+}
+
+.sidebar a.active {
+    color: var(--primary-color);
+    font-weight: 600;
+    background-color: rgba(238, 77, 45, 0.1);
+    border-left: 3px solid var(--primary-color);
+    padding-left: 15px;
+}
+
+.sidebar a {
+    display: block;
+    padding: 12px 15px;
+    color: #333;
+    text-decoration: none;
+    border-left: 3px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.sidebar a:hover {
+    background-color: rgba(238, 77, 45, 0.05);
+    color: var(--primary-color);
+}
+
+.infor-user {
+    background: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.infor-user img {
+    border: 2px solid #eee;
+}
+
+.infor-user p {
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}

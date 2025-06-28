@@ -11,13 +11,14 @@ func GetAllOrders() ([]models.Order, error) {
 	rows, err := initializers.DB.Query(`
 		SELECT
 			od.id,
-			u.name, 
+			u.username, 
 			od.idUser,
-			od.order_date,
+			od.created_at,
 			od.total_amount,
 			od.status 
 		FROM orders od
-		JOIN users u ON od.idUser = u.idUser`)
+		JOIN users u ON od.idUser = u.idUser
+		ORDER BY od.created_at DESC`)
 	if err != nil {
 		fmt.Println("Error when query: ", err)
 		return nil, err

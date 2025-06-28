@@ -1,0 +1,36 @@
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporary files
+tmp/
+*.tmp
+
+# Environment files
+.env
+.env.local
+
+# Documentation
+README.md
+*.md
+
+# Database
+*.db
+*.sqlite
+
+# Certificates
+certs/
+
+# Air for development
+air.toml 

@@ -20,7 +20,7 @@ func AddToCartHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := initializers.Store.Get(r, "session-name")
 	rawUserID, ok := session.Values["idUser"]
 	if !ok {
-		http.Redirect(w, r, "/login", http.StatusSeeOther)
+		http.Error(w, "You are not logged in", http.StatusUnauthorized)
 		return
 	}
 

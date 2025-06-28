@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Fontawesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- CSS -->
+    <link rel="stylesheet" href="/assets/css/base.css">
+    <link rel="stylesheet" href="/assets/css/common.css">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/responsive.css">
+    <title>Đơn hàng của tôi</title>
+    <style>
+        .order-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .order-header {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .order-items {
+            padding: 15px;
+        }
+
+        .item-row {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .item-row:last-child {
+            border-bottom: none;
+        }
+
+        .item-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-right: 15px;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .status-confirmed {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .status-completed {
+            background-color: #d4edda;
+            color: #155724;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content d-flex align-items-center justify-content-between">
+                <div class="header-logo">
+                    <a href="/home">
+                        <img src="/assets/img/logo_Login.svg" alt="Logo" width="120" height="60">
+                    </a>
+                </div>
+                <div class="header-search col-7 m-auto">
+                    <div class="header-input d-flex">
+                        <input type="text" class="form-control border-0 shadow-none" placeholder="Tìm kiếm ngay">
+                        <button type="button" class="btn-search">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="header-actions d-flex align-items-center">
+                    <div class="user-menu dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user"></i>
+                            {{.username}}
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/user/profile">Thông tin cá nhân</a></li>
+                            <li><a class="dropdown-item" href="/user/orders">Đơn hàng của tôi</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="/logout">Đăng xuất</a></li>
+                        </ul>
+                    </div>
+                    <a href="/cart" class="cart-icon ms-3">
+                        <i class="fas fa-shopping-cart"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-12">
+                <h2 class="mb-4">
+                    <i class="fas fa-shopping-bag me-2"></i>
+                    Đơn hàng của tôi
+                </h2>
+
+                {{if .orders}}
+                {{range .orders}}
+                <div class="order-card">
+                    <div class="order-header">
+                        <div class="row align-items-center">
+                            <div class="col-md-3">
+                                <strong>Mã đơn hàng: #{{.OrderID}}</strong>
+                            </div>
+                            <div class="col-md-3">
+                                <strong>Ngày đặt: {{.OrderDate}}</strong>
+                            </div>
+                            <div class="col-md-3">
+                                <strong>Tổng tiền: {{.TotalAmount}} VNĐ</strong>
+                            </div>
+                            <div class="col-md-3">
+                                <span class="status-badge status-{{.Status}}">
+                                    {{if eq .Status "pending"}}Chờ xác nhận{{end}}
+                                    {{if eq .Status "confirmed"}}Đã xác nhận{{end}}
+                                    {{if eq .Status "completed"}}Đã hoàn thành{{end}}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="order-items">
+                        {{range .Items}}
+                        <div class="item-row">
+                            <img src="/assets/uploads/{{.Image}}" alt="{{.ProductName}}" class="item-image">
+                            <div class="flex-grow-1">
+                                <h6 class="mb-1">{{.ProductName}}</h6>
+                                <p class="text-muted mb-0">Số lượng: {{.Quantity}}</p>
+                            </div>
+                            <div class="text-end">
+                                <strong>{{.Price}} VNĐ</strong>
+                            </div>
+                        </div>
+                        {{end}}
+                    </div>
+                </div>
+                {{end}}
+                {{else}}
+                <div class="text-center py-5">
+                    <i class="fas fa-shopping-bag fa-3x text-muted mb-3"></i>
+                    <h4 class="text-muted">Bạn chưa có đơn hàng nào</h4>
+                    <p class="text-muted">Hãy mua sắm để có đơn hàng đầu tiên!</p>
+                    <a href="/home" class="btn btn-primary">Mua sắm ngay</a>
+                </div>
+                {{end}}
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-light mt-5">
+        <div class="container">
+            <div class="footer my-4">
+                <div class="row">
+                    <!-- Customer care -->
+                    <div class="col">
+                        <div class="title-footer mb-2 mt-5">CHĂM SÓC KHÁCH HÀNG</div>
+                        <ul class="list-footer p-0">
+                            <a href="#">
+                                <li class="py-1">Trung Tâm Trợ Giúp</li>
+                            </a>
+                            <a href="#">
+                                <li class="py-1">Hobi Blog</li>
+                            </a>
+                            <a href="#">
+                                <li class="py-1">Hobi Mall</li>
+                            </a>
+                            <a href="#">
+                                <li class="py-1">Hướng Dẫn Mua Hàng</li>
+                            </a>
+                            <a href="#">
+                                <li class="py-1">Hướng Dẫn Bán Hàng</li>
+                            </a>
+                            <a href="#">
+                                <li class="py-1">Thanh Toán</li>
+                            </a>
+                            <a href="#">
+                                <li class="py-1">Hobi Xu</li>
+                            </a>
+                            <a href="#">
+                                <li class="py-1">Vận Chuyển</li>
+                            </a>
+                            <a href="#">
+                                <li class="py-1">Trả Hàng & Hoàn Tiền</li>
+                            </a>
+                            <a href="#">
+                                <li class="py-1">Chăm Sóc Khách Hàng</li>
+                            </a>
+                            <a href="#">
+                                <li class="py-1">Chính Sách Bảo Hành</li>
+                            </a>
+                        </ul>
+                    </div>
+                    <!-- End customer -->
+                    <!-- Shopee -->
+                    <div class="col">
+                        <div class="title-footer mb-2 mt-5">VỀ SHOPEE</div>
+                        <ul class="list-footer p-0">
+                            <a href="#">
+                                <li class="py-2">Giới Thiệu Về Hobi Việt Nam</li>
+                            </a>
+                            <a href="#">
+                                <li class="py-2">Tuyển Dụng</li>
+                            </a>
+                            <a href="#">
+                                <li class="py-2">Điều Khoản Hobi</li>
+                            </a>
+                            <a href="#">
+                                <li class="py-2">Chính Sách Bảo Mật</li>
+                            </a>
+                            <a href="#">
+                                <li class="py-2">Chính Hãng</li>
+                            </a>
+                            <a href="#">
+                                <li class="py-2">Kênh Người Bán</li>
+                            </a>
+                            <a href="#">
+                                <li class="py-2">Flash Sales</li>
+                            </a>
+                            <a href="#">
+                                <li class="py-2">Chương Trình Tiếp Thị Liên Kết HoBi</li>
+                            </a>
+                            <a href="#">
+                                <li class="py-2">Liên Hệ Với Truyền Thông</li>
+                            </a>
+                        </ul>
+                    </div>
+                    <!-- End  -->
+                    <!-- Pay -->
+                    <div class="col">
+                        <div class="title-footer mb-2 mt-5">THANH TOÁN</div>
+                        <ul class="d-flex flex-wrap p-0">
+                            <li class="py-2 mx-2">
+                                <img src="/assets/img/Common/payment-1.png" alt="">
+                            </li>
+                            <li class="py-2 mx-2">
+                                <img src="/assets/img/Common/payment-2.png" alt="">
+                            </li>
+                            <li class="py-2 mx-2">
+                                <img src="/assets/img/Common/payment-3.png" alt="">
+                            </li>
+                            <li class="py-2 mx-2">
+                                <img src="/assets/img/Common/payment-4.png" alt="">
+                            </li>
+                            <li class="py-2 mx-2">
+                                <img src="/assets/img/Common/payment-5.png" alt="">
+                            </li>
+                            <li class="py-2 mx-2">
+                                <img src="/assets/img/Common/payment-6.png" alt="">
+                            </li>
+                            <li class="py-2 mx-2">
+                                <img src="/assets/img/Common/payment-7.png" alt="">
+                            </li>
+                            <li class="py-2 mx-2">
+                                <img src="/assets/img/Common/payment-8.png" alt="">
+                            </li>
+                        </ul>
+                        <div class="mb-2 mt-5">Đơn Vị Vận Chuyển</div>
+                        <ul class="d-flex flex-wrap p-0">
+                            <li class="py-2 mx-2">
+                                <img src="/assets/img/Common/deli1.png" alt="">
+                            </li>
+                            <li class="py-2 mx-2">
+                                <img src="/assets/img/Common/deli2.png" alt="">
+                            </li>
+                            <li class="py-2 mx-2">
+                                <img src="/assets/img/Common/deli3.png" alt="">
+                            </li>
+                            <li class="py-2 mx-2">
+                                <img src="/assets/img/Common/deli4.png" alt="">
+                            </li>
+                            <li class="py-2 mx-2">
+                                <img src="/assets/img/Common/deli5.png" alt="">
+                            </li>
+                            <li class="py-2 mx-2">
+                                <img src="/assets/img/Common/deli6.png" alt="">
+                            </li>
+                            <li class="py-2 mx-2">
+                                <img src="/assets/img/Common/deli7.png" alt="">
+                            </li>
+                            <li class="py-2 mx-2">
+                                <img src="/assets/img/Common/deli8.png" alt="">
+                            </li>
+                            <li class="py-2 mx-2">
+                                <img src="/assets/img/Common/deli9.png" alt="">
+                            </li>
+                            <li class="py-2 mx-2">
+                                <img src="/assets/img/Common/deli10.png" alt="">
+                            </li>
+                            <li class="py-2 mx-2">
+                                <img src="/assets/img/Common/deli11.png" alt="">
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- End Pay -->
+                    <!-- Follow  -->
+                    <div class="col">
+                        <div class="title-footer mb-2 mt-5">THEO DÕI CHÚNG TÔI TRÊN</div>
+                        <ul class="p-0">
+                            <li class="my-2">
+                                <a href="https://www.facebook.com/ShopeeVN">
+                                    <img src="/assets/img/Common/img-contact-footer.png" alt="">
+                                    <span class="contact-footer">Facebook</span>
+                                </a>
+                            </li>
+                            <li class="my-2">
+                                <a href="https://www.instagram.com/Shopee_VN">
+                                    <img src="/assets/img/Common/img-contact-footer2.png" alt="">
+                                    <span class="contact-footer">Instagram</span>
+                                </a>
+                            </li>
+                            <li class="my-2">
+                                <a href="https://www.linkedin.com/company/shopee/">
+                                    <img src="/assets/img/Common/img-contact-footer3.png" alt="">
+                                    <span class="contact-footer">LinkedIn</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- End Follow -->
+                    <!-- Install app -->
+                    <div class="col">
+                        <div class="title-footer mb-2 mt-5">TẢI ỨNG DỤNG SHOPEE NGAY THÔI</div>
+                        <div class="d-flex">
+                            <a href="https://shopee.vn/web" class="shadow-sm bg-body">
+                                <img src="/assets/img/Common/qr-footer.png" alt="">
+                            </a>
+                            <div>
+                                <a href="https://shopee.vn/web"
+                                    class="d-block shadow-sm bg-body rounded my-1 mx-3 px-2">
+                                    <img src="/assets/img/Common/app_store-footer.png" alt="">
+                                </a>
+                                <a href="https://shopee.vn/web"
+                                    class="d-block shadow-sm bg-body rounded my-1 mx-3 px-2">
+                                    <img src="/assets/img/Common/google_play-footer.png" alt="">
+                                </a>
+                                <a href="https://shopee.vn/web"
+                                    class="d-block shadow-sm bg-body rounded my-1 mx-3 px-2">
+                                    <img src="/assets/img/Common/app-gallery_footer.png" alt="">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Install app -->
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- End Footer -->
+
+    <!-- Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
