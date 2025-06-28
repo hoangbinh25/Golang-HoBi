@@ -178,7 +178,7 @@ Nếu gặp vấn đề, vui lòng:
 
 1. Kiểm tra [Issues](../../issues) để xem có ai đã báo cáo chưa
 2. Tạo issue mới với thông tin chi tiết về lỗi
-3. Liên hệ qua email: your-email@example.com
+3. Liên hệ qua email: binhhp.work@gmail.com
 
 ## 🔄 Changelog
 
