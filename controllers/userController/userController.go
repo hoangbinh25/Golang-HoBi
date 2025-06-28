@@ -21,7 +21,6 @@ import (
 )
 
 var (
-	tpl *template.Template
 	err error
 )
 
@@ -38,11 +37,11 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 		"products":   products,
 	}
 
-	tpl.ExecuteTemplate(w, "home.html", data)
+	initializers.Tpl.ExecuteTemplate(w, "home.html", data)
 }
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
-	if err := tpl.ExecuteTemplate(w, "login.html", nil); err != nil {
+	if err := initializers.Tpl.ExecuteTemplate(w, "login.html", nil); err != nil {
 		fmt.Println("Error executing")
 		return
 	}
@@ -71,13 +70,13 @@ func LoginAuthHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		fmt.Println("Error selecting Hash in db by username")
-		tpl.ExecuteTemplate(w, "login.html", "Check username or password")
+		initializers.Tpl.ExecuteTemplate(w, "login.html", "Check username or password")
 		return
 	}
 
 	// Kiểm tra email đã được xác nhận chưa
 	if !emailVerified {
-		tpl.ExecuteTemplate(w, "login.html", "Vui lòng xác nhận email trước khi đăng nhập. Kiểm tra hộp thư của bạn.")
+		initializers.Tpl.ExecuteTemplate(w, "login.html", "Vui lòng xác nhận email trước khi đăng nhập. Kiểm tra hộp thư của bạn.")
 		return
 	}
 
@@ -90,7 +89,7 @@ func LoginAuthHandler(w http.ResponseWriter, r *http.Request) {
 		session, err := initializers.Store.Get(r, "session-name")
 		if err != nil {
 			fmt.Println("Error getting session:", err)
-			tpl.ExecuteTemplate(w, "login.html", "Session error. Please try again.")
+			initializers.Tpl.ExecuteTemplate(w, "login.html", "Session error. Please try again.")
 			return
 		}
 		session.Values["username"] = user.Username
@@ -106,7 +105,7 @@ func LoginAuthHandler(w http.ResponseWriter, r *http.Request) {
 
 		if err := session.Save(r, w); err != nil {
 			fmt.Println("Error saving session")
-			tpl.ExecuteTemplate(w, "login.html", "A error. Please try again")
+			initializers.Tpl.ExecuteTemplate(w, "login.html", "A error. Please try again")
 			return
 		}
 
@@ -115,13 +114,13 @@ func LoginAuthHandler(w http.ResponseWriter, r *http.Request) {
 		} else if role == "user" {
 			http.Redirect(w, r, "/home", http.StatusSeeOther)
 		} else {
-			tpl.ExecuteTemplate(w, "login.html", "Invalid role configuration")
+			initializers.Tpl.ExecuteTemplate(w, "login.html", "Invalid role configuration")
 		}
 		return
 
 	}
 
-	tpl.ExecuteTemplate(w, "login.html", "Invalid username or password")
+	initializers.Tpl.ExecuteTemplate(w, "login.html", "Invalid username or password")
 }
 
 func LogoutHandler(w http.ResponseWriter, r *http.Request) {
@@ -144,7 +143,7 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func RegisterHandler(w http.ResponseWriter, r *http.Request) {
-	if err := tpl.ExecuteTemplate(w, "register.html", nil); err != nil {
+	if err := initializers.Tpl.ExecuteTemplate(w, "register.html", nil); err != nil {
 		fmt.Println("Error executing template")
 		return
 	}
@@ -176,18 +175,18 @@ func RegisterAuthHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if !nameAlphanumeric {
-		tpl.ExecuteTemplate(w, "register.html", "Username chỉ được chứa chữ cái và số")
+		initializers.Tpl.ExecuteTemplate(w, "register.html", "Username chỉ được chứa chữ cái và số")
 		return
 	}
 
 	if !nameLength {
-		tpl.ExecuteTemplate(w, "register.html", "Username phải có độ dài từ 5 đến 50 ký tự")
+		initializers.Tpl.ExecuteTemplate(w, "register.html", "Username phải có độ dài từ 5 đến 50 ký tự")
 		return
 	}
 
 	var emailRegex = regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`)
 	if !emailRegex.MatchString(user.Email) {
-		tpl.ExecuteTemplate(w, "register.html", "Invalid email address")
+		initializers.Tpl.ExecuteTemplate(w, "register.html", "Invalid email address")
 		return
 	}
 
@@ -198,7 +197,7 @@ func RegisterAuthHandler(w http.ResponseWriter, r *http.Request) {
 
 	if isValid, msg := validatePassword(user.Password); !isValid {
 		fmt.Println("Error: ", msg)
-		tpl.ExecuteTemplate(w, "register.html", msg)
+		initializers.Tpl.ExecuteTemplate(w, "register.html", msg)
 		return
 	}
 
@@ -207,12 +206,12 @@ func RegisterAuthHandler(w http.ResponseWriter, r *http.Request) {
 	err := initializers.DB.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE username = ?)", user.Username).Scan(&usernameExists)
 	if err != nil {
 		fmt.Println("Error when checking username exists: ", err)
-		tpl.ExecuteTemplate(w, "register.html", "Database error. Please try again.")
+		initializers.Tpl.ExecuteTemplate(w, "register.html", "Database error. Please try again.")
 		return
 	}
 
 	if usernameExists {
-		tpl.ExecuteTemplate(w, "register.html", "Username already exists")
+		initializers.Tpl.ExecuteTemplate(w, "register.html", "Username already exists")
 		return
 	}
 
@@ -221,12 +220,12 @@ func RegisterAuthHandler(w http.ResponseWriter, r *http.Request) {
 	err = initializers.DB.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE email = ?)", user.Email).Scan(&emailExists)
 	if err != nil {
 		fmt.Println("Error when checking email exists: ", err)
-		tpl.ExecuteTemplate(w, "register.html", "Database error. Please try again.")
+		initializers.Tpl.ExecuteTemplate(w, "register.html", "Database error. Please try again.")
 		return
 	}
 
 	if emailExists {
-		tpl.ExecuteTemplate(w, "register.html", "Email already exists")
+		initializers.Tpl.ExecuteTemplate(w, "register.html", "Email already exists")
 		return
 	}
 
@@ -234,7 +233,7 @@ func RegisterAuthHandler(w http.ResponseWriter, r *http.Request) {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	if err != nil {
 		fmt.Println("Error when hashing password: ", err)
-		tpl.ExecuteTemplate(w, "register.html", "Error processing password. Please try again.")
+		initializers.Tpl.ExecuteTemplate(w, "register.html", "Error processing password. Please try again.")
 		return
 	}
 
@@ -244,7 +243,7 @@ func RegisterAuthHandler(w http.ResponseWriter, r *http.Request) {
 	// Tạo user với email chưa được xác nhận
 	if err := usermodel.CreateUser(&user); err != nil {
 		fmt.Println("Error when creating user: ", err)
-		tpl.ExecuteTemplate(w, "register.html", "Error creating user")
+		initializers.Tpl.ExecuteTemplate(w, "register.html", "Error creating user")
 		return
 	}
 
@@ -252,7 +251,7 @@ func RegisterAuthHandler(w http.ResponseWriter, r *http.Request) {
 	verification, err := usermodel.CreateEmailVerification(user.Email, "register")
 	if err != nil {
 		fmt.Println("Error creating email verification: ", err)
-		tpl.ExecuteTemplate(w, "register.html", "Error creating verification token")
+		initializers.Tpl.ExecuteTemplate(w, "register.html", "Error creating verification token")
 		return
 	}
 
@@ -277,7 +276,7 @@ func RegisterAuthHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err := utils.SendMail(user.Email, subject, body); err != nil {
 		fmt.Println("Error sending verification email: ", err)
-		tpl.ExecuteTemplate(w, "register.html", "Error sending verification email")
+		initializers.Tpl.ExecuteTemplate(w, "register.html", "Error sending verification email")
 		return
 	}
 
@@ -286,7 +285,7 @@ func RegisterAuthHandler(w http.ResponseWriter, r *http.Request) {
 		"email":   user.Email,
 		"message": "Đăng ký thành công! Vui lòng kiểm tra email để xác nhận tài khoản.",
 	}
-	tpl.ExecuteTemplate(w, "verifyEmailSent.html", data)
+	initializers.Tpl.ExecuteTemplate(w, "verifyEmailSent.html", data)
 }
 
 func ProfileUserHandler(w http.ResponseWriter, r *http.Request) {
@@ -333,7 +332,7 @@ func ProfileUserHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Render template
-	tpl.ExecuteTemplate(w, "profileUser.html", data)
+	initializers.Tpl.ExecuteTemplate(w, "profileUser.html", data)
 }
 
 func ProfileUserUpdateHandler(w http.ResponseWriter, r *http.Request) {
@@ -455,7 +454,7 @@ func ProfileUserUpdatePasswordHandler(w http.ResponseWriter, r *http.Request) {
 			"isLoggedIn": true,
 		}
 
-		tpl.ExecuteTemplate(w, "changePassword.html", data)
+		initializers.Tpl.ExecuteTemplate(w, "changePassword.html", data)
 	}
 
 	if r.Method == http.MethodPost {
@@ -508,7 +507,7 @@ func ProfileUserUpdatePasswordHandler(w http.ResponseWriter, r *http.Request) {
 			"success":    "Password updated successfully",
 		}
 
-		tpl.ExecuteTemplate(w, "changePassword.html", data)
+		initializers.Tpl.ExecuteTemplate(w, "changePassword.html", data)
 	}
 
 }
@@ -692,7 +691,7 @@ func ConfirmReceivedHandler(w http.ResponseWriter, r *http.Request) {
 
 func ForgotPasswordHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
-		tpl.ExecuteTemplate(w, "forgotPassword.html", nil)
+		initializers.Tpl.ExecuteTemplate(w, "forgotPassword.html", nil)
 		return
 	}
 
@@ -704,7 +703,7 @@ func ForgotPasswordHandler(w http.ResponseWriter, r *http.Request) {
 
 		email := r.FormValue("email")
 		if email == "" {
-			tpl.ExecuteTemplate(w, "forgotPassword.html", "Email không được để trống")
+			initializers.Tpl.ExecuteTemplate(w, "forgotPassword.html", "Email không được để trống")
 			return
 		}
 
@@ -716,7 +715,7 @@ func ForgotPasswordHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if user == nil {
-			tpl.ExecuteTemplate(w, "forgotPassword.html", "Email không tồn tại trong hệ thống")
+			initializers.Tpl.ExecuteTemplate(w, "forgotPassword.html", "Email không tồn tại trong hệ thống")
 			return
 		}
 
@@ -755,7 +754,7 @@ func ForgotPasswordHandler(w http.ResponseWriter, r *http.Request) {
 			"email":   email,
 			"message": "Email đặt lại mật khẩu đã được gửi. Vui lòng kiểm tra hộp thư của bạn.",
 		}
-		tpl.ExecuteTemplate(w, "resetPasswordSent.html", data)
+		initializers.Tpl.ExecuteTemplate(w, "resetPasswordSent.html", data)
 	}
 }
 
@@ -819,7 +818,7 @@ func VerifyEmailHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{
 		"message": "Xác nhận email thành công! Bạn có thể đăng nhập ngay bây giờ.",
 	}
-	tpl.ExecuteTemplate(w, "emailVerified.html", data)
+	initializers.Tpl.ExecuteTemplate(w, "emailVerified.html", data)
 }
 
 func ResetPasswordHandler(w http.ResponseWriter, r *http.Request) {
@@ -833,7 +832,7 @@ func ResetPasswordHandler(w http.ResponseWriter, r *http.Request) {
 		data := map[string]interface{}{
 			"token": token,
 		}
-		tpl.ExecuteTemplate(w, "resetPassword.html", data)
+		initializers.Tpl.ExecuteTemplate(w, "resetPassword.html", data)
 		return
 	}
 
@@ -848,7 +847,7 @@ func ResetPasswordHandler(w http.ResponseWriter, r *http.Request) {
 		confirmPassword := r.FormValue("confirmPassword")
 
 		if newPassword != confirmPassword {
-			tpl.ExecuteTemplate(w, "resetPassword.html", map[string]interface{}{
+			initializers.Tpl.ExecuteTemplate(w, "resetPassword.html", map[string]interface{}{
 				"token": token,
 				"error": "Mật khẩu không khớp",
 			})
@@ -857,7 +856,7 @@ func ResetPasswordHandler(w http.ResponseWriter, r *http.Request) {
 
 		// Validate password
 		if isValid, msg := validatePassword(newPassword); !isValid {
-			tpl.ExecuteTemplate(w, "resetPassword.html", map[string]interface{}{
+			initializers.Tpl.ExecuteTemplate(w, "resetPassword.html", map[string]interface{}{
 				"token": token,
 				"error": msg,
 			})
@@ -913,6 +912,6 @@ func ResetPasswordHandler(w http.ResponseWriter, r *http.Request) {
 		data := map[string]interface{}{
 			"message": "Đặt lại mật khẩu thành công! Bạn có thể đăng nhập với mật khẩu mới.",
 		}
-		tpl.ExecuteTemplate(w, "passwordResetSuccess.html", data)
+		initializers.Tpl.ExecuteTemplate(w, "passwordResetSuccess.html", data)
 	}
 }
