@@ -59,7 +59,7 @@ func InitializersRoutes() {
 	http.HandleFunc("/admin/orders/confirm", admincontroller.ConfirmOrder)
 
 	// Routes
-	http.HandleFunc("/", admincontroller.AdminHomeHandler)
+	http.HandleFunc("/", usercontroller.HomeHandler)
 	http.HandleFunc("/product/detail", admincontroller.DetailProductHandler)
 
 	// login routes
