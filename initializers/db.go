@@ -2,71 +2,63 @@ package initializers
 
 import (
 	"context"
+	"crypto/tls"
+	"crypto/x509"
 	"database/sql"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 	"time"
 
+	"github.com/go-sql-driver/mysql"
 	_ "github.com/go-sql-driver/mysql"
 )
 
 var DB *sql.DB
 
 func ConnectDatabase() {
-	// Get database configuration from environment variables
-	dbHost := os.Getenv("DB_HOST")
-	dbPort := os.Getenv("DB_PORT")
-	dbUser := os.Getenv("DB_USER")
-	dbPassword := os.Getenv("DB_PASSWORD")
-	dbName := os.Getenv("DB_NAME")
-
-	// Use default values for local development if not set
-	if dbHost == "" {
-		dbHost = "localhost"
+	rootCertPool := x509.NewCertPool()
+	pem, err := ioutil.ReadFile("./certs/ca.pem") // File từ Aiven
+	if err != nil {
+		log.Fatal("Failed to read CA cert:", err)
 	}
-	if dbPort == "" {
-		dbPort = "3306"
-	}
-	if dbUser == "" {
-		dbUser = "root"
-	}
-	if dbPassword == "" {
-		dbPassword = "123456"
-	}
-	if dbName == "" {
-		dbName = "go_ecommerce"
+	if ok := rootCertPool.AppendCertsFromPEM(pem); !ok {
+		log.Fatal("Failed to append CA cert")
 	}
 
-	// Build DSN
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true",
-		dbUser, dbPassword, dbHost, dbPort, dbName)
+	err = mysql.RegisterTLSConfig("custom", &tls.Config{
+		RootCAs:            rootCertPool,
+		InsecureSkipVerify: true,
+	})
+	if err != nil {
+		log.Fatal("Failed to register TLS config:", err)
+	}
 
-	log.Println("Connecting to database...")
-	log.Printf("Database host: %s:%s", dbHost, dbPort)
+	// Connect to database
+	dsn := os.Getenv("DB_DSN")
+	if dsn == "" {
+		log.Println("⚠️ DB_DSN not found, using fallback local DSN")
+		dsn = "root:123456@tcp(localhost:3306)/go_ecommerce?parseTime=true"
+	}
+	log.Println("Using DSN:", dsn)
 
-	db, err := sql.Open("mysql", dsn)
+	DB, err = sql.Open("mysql", dsn)
 	if err != nil {
 		log.Fatal("Failed to open database:", err)
 	}
 
-	// Cấu hình connection pool
-	db.SetMaxOpenConns(25)
-	db.SetMaxIdleConns(10)
-	db.SetConnMaxLifetime(time.Hour)
-
-	// Test connection với timeout
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-
-	err = db.PingContext(ctx)
+	err = DB.Ping()
 	if err != nil {
-		log.Fatal("Database ping failed:", err)
+		log.Fatal("Ping DB failure:", err)
 	}
 
-	log.Println("Database connected successfully")
-	DB = db
+	log.Println("Connected successfully")
+
+	if err != nil {
+		fmt.Println(err.Error())
+	}
 }
 
 func HealthCheck(w http.ResponseWriter, r *http.Request) {
