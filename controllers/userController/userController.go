@@ -1,6 +1,7 @@
 package usercontroller
 
 import (
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"log"
@@ -37,17 +38,14 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 		"products":   products,
 	}
 
-	initializers.Tpl.ExecuteTemplate(w, "home.html", data)
-}
-
-func LoginHandler(w http.ResponseWriter, r *http.Request) {
-	if err := initializers.Tpl.ExecuteTemplate(w, "login.html", nil); err != nil {
-		fmt.Println("Error executing")
-		return
+	err := initializers.Tpl.ExecuteTemplate(w, "home.html", data)
+	if err != nil {
+		fmt.Println("Template render error: ", err)
+		http.Error(w, "Template error", http.StatusInternalServerError)
 	}
 }
 
-func LoginAuthHandler(w http.ResponseWriter, r *http.Request) {
+func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseForm(); err != nil {
 		http.Error(w, "Error parsing form", http.StatusBadRequest)
 		return
@@ -109,11 +107,13 @@ func LoginAuthHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		if role == "admin" {
+		switch role {
+		case "admin":
 			http.Redirect(w, r, "/admin", http.StatusSeeOther)
-		} else if role == "user" {
+			log.Println("Login success, role:", role)
+		case "user":
 			http.Redirect(w, r, "/home", http.StatusSeeOther)
-		} else {
+		default:
 			initializers.Tpl.ExecuteTemplate(w, "login.html", "Invalid role configuration")
 		}
 		return
@@ -294,8 +294,6 @@ func ProfileUserHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Session error", http.StatusInternalServerError)
 		return
 	}
-
-	// fmt.Println("Tất cả giá trị trong session: ", session.Values)
 
 	username, _ := session.Values["username"].(string)
 
@@ -690,39 +688,44 @@ func ConfirmReceivedHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func ForgotPasswordHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodGet {
-		initializers.Tpl.ExecuteTemplate(w, "forgotPassword.html", nil)
-		return
-	}
-
 	if r.Method == http.MethodPost {
-		if err := r.ParseForm(); err != nil {
-			http.Error(w, "Error parsing form", http.StatusBadRequest)
+		// Đọc JSON từ body
+		var req struct {
+			Email string `json:"email"`
+		}
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			http.Error(w, `{"message":"Dữ liệu không hợp lệ"}`, http.StatusBadRequest)
 			return
 		}
-
-		email := r.FormValue("email")
+		email := req.Email
 		if email == "" {
-			initializers.Tpl.ExecuteTemplate(w, "forgotPassword.html", "Email không được để trống")
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte(`{"message":"Email không được để trống"}`))
 			return
 		}
 
 		// Kiểm tra email có tồn tại không
 		user, err := usermodel.FindUserByEmail(email)
 		if err != nil {
-			http.Error(w, "Database error", http.StatusInternalServerError)
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(`{"message":"Lỗi hệ thống"}`))
 			return
 		}
-
 		if user == nil {
-			initializers.Tpl.ExecuteTemplate(w, "forgotPassword.html", "Email không tồn tại trong hệ thống")
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusNotFound)
+			w.Write([]byte(`{"message":"Email không tồn tại trong hệ thống"}`))
 			return
 		}
 
 		// Tạo token reset password
 		verification, err := usermodel.CreateEmailVerification(email, "forgot_password")
 		if err != nil {
-			http.Error(w, "Error creating reset token", http.StatusInternalServerError)
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(`{"message":"Không thể tạo token"}`))
 			return
 		}
 
@@ -743,19 +746,22 @@ func ForgotPasswordHandler(w http.ResponseWriter, r *http.Request) {
 
 			Trân trọng,
 			Đội ngũ HoBi
-		`, user.Username, verification.Token)
+		`, user.Username, email, verification.Token)
 
 		if err := utils.SendMail(email, subject, body); err != nil {
-			http.Error(w, "Error sending reset email", http.StatusInternalServerError)
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(`{"message":"Gửi email thất bại"}`))
 			return
 		}
 
-		data := map[string]interface{}{
-			"email":   email,
-			"message": "Email đặt lại mật khẩu đã được gửi. Vui lòng kiểm tra hộp thư của bạn.",
-		}
-		initializers.Tpl.ExecuteTemplate(w, "resetPasswordSent.html", data)
+		w.Header().Set("Content-Type", "application/json")
+		w.Write([]byte(`{"message":"Email đặt lại mật khẩu đã được gửi. Vui lòng kiểm tra hộp thư của bạn."}`))
+		return
 	}
+
+	// Nếu là GET, có thể trả về 404 hoặc redirect về trang login
+	http.NotFound(w, r)
 }
 
 func VerifyEmailHandler(w http.ResponseWriter, r *http.Request) {

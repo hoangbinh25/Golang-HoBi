@@ -60,11 +60,11 @@ func InitializersRoutes() {
 
 	// Routes
 	http.HandleFunc("/", usercontroller.HomeHandler)
+	http.HandleFunc("/home", usercontroller.HomeHandler)
 	http.HandleFunc("/product/detail", admincontroller.DetailProductHandler)
 
 	// login routes
 	http.HandleFunc("/login", usercontroller.LoginHandler)
-	http.HandleFunc("/loginauth", usercontroller.LoginAuthHandler)
 	http.HandleFunc("/auth/google", oauth.HandleGoogleLogin)
 	http.HandleFunc("/auth/callback", oauth.HandleGoogleCallback)
 

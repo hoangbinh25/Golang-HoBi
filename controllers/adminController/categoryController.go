@@ -56,7 +56,7 @@ func CreateCategory(w http.ResponseWriter, r *http.Request) {
 		}
 		defer file.Close()
 
-		uploadDir := "assets/uploads"
+		uploadDir := "assets/uploads/"
 		if _, err := os.Stat(uploadDir); os.IsNotExist(err) {
 			err := os.MkdirAll(uploadDir, 0755)
 			if err != nil {

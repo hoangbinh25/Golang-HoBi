@@ -83,5 +83,6 @@ select * from order_items;
 select * from users;
 ALTER TABLE users ADD COLUMN email_verified BOOLEAN NOT NULL DEFAULT 0;
 
-
+INSERT INTO users (username, password, email, role, email_verified)
+VALUES ('admin', '$2a$12$tPkqwZBvGU5jhyFDeXlc9ef2Hji8l.5FpZS0CBAGIYSdZXhsLI7K2', 'binh20xx@gmail.com', 'admin', 1);
 
