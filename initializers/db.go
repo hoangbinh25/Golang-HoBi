@@ -22,7 +22,7 @@ func ConnectDatabase() {
 	rootCertPool := x509.NewCertPool()
 	pem, err := ioutil.ReadFile("./certs/ca.pem") // File từ Aiven
 	if err != nil {
-		log.Fatal("Failed to read CA cert:", err)
+		// log.Fatal("Failed to read CA cert:", err)
 	}
 	if ok := rootCertPool.AppendCertsFromPEM(pem); !ok {
 		log.Fatal("Failed to append CA cert")

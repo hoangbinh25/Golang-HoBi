@@ -15,7 +15,6 @@ import (
 func main() {
 	err := godotenv.Load()
 	if err != nil {
-		log.Println("Không tìm thấy file .env hoặc lỗi khi đọc file")
 	}
 
 	initializers.InitOAuth()

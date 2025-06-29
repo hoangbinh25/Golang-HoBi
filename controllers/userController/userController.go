@@ -25,6 +25,10 @@ var (
 	err error
 )
 
+func TestHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, "App chay tren Render rồi")
+}
+
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	// Read session from browser
 	session, _ := initializers.Store.Get(r, "session-name")

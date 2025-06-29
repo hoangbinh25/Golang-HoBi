@@ -1,7 +1,6 @@
 package initializers
 
 import (
-	"log"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -14,7 +13,7 @@ var GoogleOAuthConfig *oauth2.Config
 func InitOAuth() {
 	err := godotenv.Load()
 	if err != nil {
-		log.Println("Không tìm thấy file .env hoặc lỗi khi đọc file")
+		// log.Println("Không tìm thấy file .env hoặc lỗi khi đọc file")
 	}
 
 	GoogleOAuthConfig = &oauth2.Config{
