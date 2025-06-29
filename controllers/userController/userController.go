@@ -78,7 +78,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Kiểm tra email đã được xác nhận chưa
 	if !emailVerified {
-		initializers.Tpl.ExecuteTemplate(w, "login.html", "Vui lòng xác nhận email trước khi đăng nhập. Kiểm tra hộp thư của bạn.")
+		initializers.Tpl.ExecuteTemplate(w, "login.html", "Please confirm email before login. Check your email.")
 		return
 	}
 
