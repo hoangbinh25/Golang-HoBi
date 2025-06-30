@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
+	"os"
 
 	"github.com/Golang-Shoppe/controllers/utils"
 	"github.com/Golang-Shoppe/initializers"
@@ -110,13 +111,13 @@ func ConfirmOrder(w http.ResponseWriter, r *http.Request) {
 			- Trạng thái: Đã giao hàng
 
 			Vui lòng xác nhận rằng bạn đã nhận được hàng bằng cách click vào link bên dưới:
-			http://localhost:8080/user/confirm-received?order_id=%s
+			%s/user/confirm-received?order_id=%s
 
 			Cảm ơn bạn đã mua hàng tại cửa hàng của chúng tôi!
 
 			Trân trọng,
 			Đội ngũ Shopee
-		`, username, orderID, orderID, totalAmount, orderID)
+		`, username, orderID, orderID, totalAmount, os.Getenv("APP_URL"), orderID)
 
 		if err := utils.SendMail(userEmail, subject, body); err != nil {
 			fmt.Printf("Error sending email: %v\n", err)

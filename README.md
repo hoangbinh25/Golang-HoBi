@@ -122,44 +122,6 @@ Golang-HoBi/
 └── db.sql             # Database schema
 ```
 
-## 🔧 API Endpoints
-
-### Authentication
-
-- `GET /login` - Login page
-- `POST /loginauth` - Login authentication
-- `GET /register` - Register page
-- `POST /registerauth` - Register authentication
-- `GET /auth/google` - Google OAuth login
-- `GET /auth/callback` - Google OAuth callback
-
-### Products
-
-- `GET /` - Home page with products
-- `GET /product/detail` - Product detail page
-- `GET /category` - Category products
-
-### Cart
-
-- `GET /cart` - View cart
-- `POST /cart/add` - Add to cart
-- `GET /cart/data` - Get cart data
-- `POST /cart/update` - Update cart quantity
-- `POST /cart/delete` - Delete cart item
-
-### Orders
-
-- `GET /checkout` - Checkout page
-- `POST /checkout/submit` - Submit order
-- `GET /user/orders` - User orders history
-
-### Admin
-
-- `GET /admin` - Admin dashboard
-- `GET /admin/products` - Manage products
-- `GET /admin/orders` - Manage orders
-- `POST /admin/orders/confirm` - Confirm order
-
 ## 🤝 Contributing
 
 1. Fork the project

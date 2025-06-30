@@ -59,7 +59,7 @@ func InitializersRoutes() {
 	http.HandleFunc("/admin/orders/confirm", admincontroller.ConfirmOrder)
 
 	// Routes
-	http.HandleFunc("/", usercontroller.TestHandler)
+	http.HandleFunc("/", usercontroller.HomeHandler)
 	http.HandleFunc("/home", usercontroller.HomeHandler)
 	http.HandleFunc("/product/detail", admincontroller.DetailProductHandler)
 
@@ -75,8 +75,6 @@ func InitializersRoutes() {
 	http.HandleFunc("/registerauth", usercontroller.RegisterAuthHandler)
 
 	// Email verification and password reset routes
-	http.HandleFunc("/verify-email", usercontroller.VerifyEmailHandler)
-	http.HandleFunc("/forgot-password", usercontroller.ForgotPasswordHandler)
 	http.HandleFunc("/reset-password", usercontroller.ResetPasswordHandler)
 
 	// profile user routes
@@ -98,5 +96,9 @@ func InitializersRoutes() {
 	http.HandleFunc("/checkout/submit", checkoutcontroller.CheckOutCartHandle)
 
 	http.HandleFunc("/category", categorycontroller.ShowProductsCategory)
+
+	// Seacrh
+	http.HandleFunc("/search", usercontroller.SearchHandler)
+	http.HandleFunc("/api/search-suggestions", usercontroller.SearchSuggestionsHandler)
 
 }

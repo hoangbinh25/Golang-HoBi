@@ -9,9 +9,6 @@ main.exe
 *.log
 tmp/
 
-# User uploads
-assets/uploads/
-
 # System files
 .DS_Store
 Thumbs.db

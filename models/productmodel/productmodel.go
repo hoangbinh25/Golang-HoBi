@@ -283,3 +283,45 @@ func GetProductsByCategory(cateId int) ([]Product, error) {
 func (p Product) InStock() int {
 	return p.Quantity - p.SoldQuantity
 }
+
+func SearchByName(query string) ([]Product, error) {
+	rows, err := initializers.DB.Query("SELECT * FROM products WHERE name LIKE ?", "%"+query+"%")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var products []Product
+	for rows.Next() {
+		var p Product
+		// Scan các trường của sản phẩm
+		if err := rows.Scan(&p.ProductId, &p.Name, &p.Price, &p.Image, &p.Description, &p.Category.Id); err != nil {
+			return nil, err
+		}
+		products = append(products, p)
+	}
+	return products, nil
+}
+
+func SearchProducts(query string) ([]Product, error) {
+	rows, err := initializers.DB.Query(`
+        SELECT p.* FROM products p
+        JOIN categories c ON p.category_id = c.id
+        WHERE p.name LIKE ? OR c.name LIKE ?
+    `, "%"+query+"%", "%"+query+"%")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var products []Product
+	for rows.Next() {
+		var p Product
+		// Scan các trường của sản phẩm
+		if err := rows.Scan(&p.ProductId, &p.Name, &p.Price, &p.Image, &p.Description, &p.Category.Id); err != nil {
+			return nil, err
+		}
+		products = append(products, p)
+	}
+	return products, nil
+}
