@@ -108,7 +108,7 @@ func UpdateCartQuantityHandle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	productId, _ := strconv.Atoi(r.FormValue("product_id"))
+	productId, _ := strconv.Atoi(r.FormValue("productId"))
 	quantity, _ := strconv.Atoi(r.FormValue("quantity"))
 
 	_, err := initializers.DB.Exec(`

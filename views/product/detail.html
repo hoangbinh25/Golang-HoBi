@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="/assets/css/base.css">
     <link rel="stylesheet" href="/assets/css/common.css">
     <script src="/assets/js/main.js" defer></script>
-    <script src="/assets/js/user/addToCart.js"></script>
     <script src="/assets/js/user/loadCart.js"></script>
     <script src="/assets/js/formatVND/formatVND.js"></script>
     <script src="/assets/js/products/mainProduct.js"></script>
@@ -143,8 +142,7 @@
                 <!-- Cột ảnh sản phẩm -->
                 <div class="col-md-5">
                     <div class="product-gallery border p-3">
-                        <input type="hidden" name="productId" id="productId" value="{{ .product.ProductId }}">
-
+                        <input type="text" name="productId" id="productId" value="{{ .productId }}">
                         <!-- Ảnh chính -->
                         <img id="productImage" src="/{{ .product.Image }}" alt="Product Image" class="img-fluid" />
                     </div>
@@ -163,7 +161,7 @@
                         </span>
                         <span class="divider px-2">|</span>
                         <input id="stockQuantity" type="hidden" name="" value=" {{ .product.Quantity }}">
-                        <span id="soldQuantity" data-sold="{{ .product.SoldQuantity }}"> Đã bán {{
+                        <span id="soldQuantity" class="sold-data" data-sold="{{ .product.SoldQuantity }}"> Đã bán {{
                             .product.SoldQuantity }}</span>
                     </div>
 

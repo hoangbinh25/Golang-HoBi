@@ -72,10 +72,10 @@ func ShowCheckoutPage(w http.ResponseWriter, r *http.Request) {
 	for rows.Next() {
 		var name, image string
 		var price int64
-		var product_id, stock, sold, cartQuantity int
+		var productId, stock, sold, cartQuantity int
 
 		err := rows.Scan(
-			&product_id,
+			&productId,
 			&name,
 			&image,
 			&price,
@@ -93,14 +93,14 @@ func ShowCheckoutPage(w http.ResponseWriter, r *http.Request) {
 		total += itemTotal
 
 		cart = append(cart, map[string]any{
-			"product_id": product_id,
-			"name":       name,
-			"image":      image,
-			"price":      price,
-			"stock":      stock,
-			"sold":       sold,
-			"quantity":   cartQuantity,
-			"total":      total,
+			"productId": productId,
+			"name":      name,
+			"image":     image,
+			"price":     price,
+			"stock":     stock,
+			"sold":      sold,
+			"quantity":  cartQuantity,
+			"total":     total,
 		})
 	}
 

@@ -43,6 +43,13 @@ func AddToCartHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Lấy quantity từ form (POST)
+	quantityStr := r.FormValue("quantity")
+	quantity, err := strconv.Atoi(quantityStr)
+	if err != nil || quantity < 1 {
+		quantity = 1
+	}
+
 	// Kiểm tra sản phẩm có tồn tại không
 	var price int64
 	err = initializers.DB.QueryRow(`
@@ -54,28 +61,28 @@ func AddToCartHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Kiểm tra sản phẩm đã có trong giỏ hàng chưa
-	var quantity int
+	var oldQuantity int
 	err = initializers.DB.QueryRow(`
 		SELECT quantity FROM cart_items WHERE idUser = ? AND product_id = ?
-	`, userID, productID).Scan(&quantity)
+	`, userID, productID).Scan(&oldQuantity)
 
 	if err == sql.ErrNoRows {
 		// Chưa có → thêm mới
 		_, err = initializers.DB.Exec(`
 			INSERT INTO cart_items (idUser, product_id, quantity, price)
 			VALUES (?, ?, ?, ?)`,
-			userID, productID, 1, price)
+			userID, productID, quantity, price)
 		if err != nil {
 			http.Error(w, "Failed to add to cart", http.StatusInternalServerError)
 			return
 		}
 		fmt.Println("Đã thêm mới vào giỏ hàng: ", productID)
 	} else if err == nil {
-		// Đã có → tăng số lượng
+		// Đã có → cập nhật lại số lượng
 		_, err = initializers.DB.Exec(`
-			UPDATE cart_items SET quantity = quantity + 1, price = ?
+			UPDATE cart_items SET quantity = ?, price = ?
 			WHERE idUser = ? AND product_id = ?`,
-			price, userID, productID)
+			quantity, price, userID, productID)
 
 		fmt.Println("Đã cập nhật số lượng giỏ hàng: ", productID)
 		if err != nil {
@@ -94,5 +101,4 @@ func AddToCartHandler(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("idUser: ", userID)
 	fmt.Println("ProductID: ", productID)
-
 }

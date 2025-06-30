@@ -305,6 +305,7 @@ func DetailProductHandler(w http.ResponseWriter, r *http.Request) {
 
 	data := map[string]any{
 		"username":   username,
+		"productId":  product.ProductId,
 		"product":    product,
 		"isLoggedIn": isLoggedIn,
 	}

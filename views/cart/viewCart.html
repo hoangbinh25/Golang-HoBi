@@ -135,7 +135,7 @@
         <div class="container mt-10 bg-light bg-gradient">
             <div class="row fw-bold border-bottom">
                 <div class="col-1">
-                    <input type="checkbox" class="" name="selected_products" value="{{ .product_id }}" />
+                    <input type="checkbox" class="" name="selected_products" value="{{ .productId }}" />
                 </div>
                 <div class="col-3">Sản phẩm</div>
                 <div class="col-1 text-center">Đơn giá</div>
@@ -145,23 +145,21 @@
             <div class="cart__item pt-3">
                 {{ range .cart }}
                 <div class="row d-flex align-items-center pb-4">
-                    <input type="hidden" name="productId" class="productId" value="{{ .product_id }}">
+                    <input type="hidden" class="productId" value="{{ .productId }}">
                     <div class="cart__item--title bg-warning text-white p-2 mb-2">Mua Kèm Deal Sốc với mức giá ưu đãi
                     </div>
                     <div class="col d-flex align-items-center">
-                        <input type="checkbox" class="me-4" name="selected_products" value="{{ .product_id }}" />
+                        <input type="checkbox" class="me-4" name="selected_products" value="{{ .productId }}" />
                         <img src="/{{ .image }}" alt="" width="80px" height="80px">
                         <div class="cart__item--productName ms-3">{{ .name }}</div>
                     </div>
                     <div class="col text-center vnd">{{ .price }}</div>
-
                     <div class="col ms-5">
                         <div class="my-3">
                             <div class="input-group" style="width: 140px;">
-                                <input type="hidden" class="productId" value="{{ .product_id }}">
-                                <input type="hidden" class="stock-data" value="{{ .stock }}">
-                                <input type="hidden" class="sold-data" value="{{ .sold }}">
-
+                                <input id="stockQuantity" type="hidden" name="" value=" {{ .product.Quantity }}">
+                                <span id="soldQuantity" class="sold-data" data-sold="{{ .product.SoldQuantity }}">{{
+                                    .product.SoldQuantity }}</span>
                                 <button class="btn btn-outline-secondary" onclick="decreaseQuantity(this)">-</button>
                                 <input type="text" class="form-control text-center quantity" value="{{ .quantity }}"
                                     min="1" />

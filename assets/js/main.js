@@ -6,12 +6,12 @@ function increaseQuantity(button) {
     }
 
     const input = group.querySelector(".quantity");
-    const stock = parseInt(group.querySelector(".stock-data")?.value || "0");
-    const sold = parseInt(group.querySelector(".sold-data")?.value || "0");
-    const productId = button.closest(".col")?.querySelector(".productId")?.value;
+    const stock = parseInt(document.getElementById("stockQuantity")?.value || "0");
+    const sold = parseInt(document.getElementById("soldQuantity")?.getAttribute("data-sold") || "0");
+    const productId = button.closest(".row")?.querySelector(".productId")?.value;
     const current = parseInt(input.value || "1");
 
-    if (current + sold >= stock) {
+    if (current >= (stock - sold)) {
         alert("⚠️ Vượt quá số lượng tồn kho!");
         return;
     }
@@ -25,7 +25,7 @@ function decreaseQuantity(button) {
     if (!group) return;
 
     const input = group.querySelector(".quantity");
-    const productId = button.closest(".col")?.querySelector(".productId")?.value;
+    const productId = button.closest(".row")?.querySelector(".productId")?.value;
     const current = parseInt(input.value || "1");
 
 
@@ -46,7 +46,7 @@ function updateQuantity(productId, quantity) {
             "Content-Type": "application/x-www-form-urlencoded",
         },
 
-        body: `product_id=${productId}&quantity=${quantity}`,
+        body: `productId=${productId}&quantity=${quantity}`,
 
     }).then(res => {
         if (!res.ok) {
@@ -79,14 +79,12 @@ function deleteCartItem(button) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-    // Bắt sự kiện cho nút "Mua ngay"
-    const buyNowBtn = document.querySelector('.product-actions .btn.btn-danger:last-child');
-    if (buyNowBtn) {
-        buyNowBtn.addEventListener('click', function (e) {
+    const addToCartBtn = document.querySelector('.product-actions .add-to-cart');
+    if (addToCartBtn) {
+        addToCartBtn.addEventListener('click', function (e) {
             e.preventDefault();
-            // Lấy số lượng hiện tại
             const quantityInput = document.querySelector('.input-group .quantity');
-            const productIdInput = document.querySelector('.input-group .productId');
+            const productIdInput = document.getElementById('productId');
             const quantity = quantityInput ? parseInt(quantityInput.value) : 1;
             const productId = productIdInput ? productIdInput.value : null;
 
@@ -94,11 +92,26 @@ document.addEventListener("DOMContentLoaded", function () {
                 alert("Không tìm thấy sản phẩm!");
                 return;
             }
-            console.log(productId);
 
-
-            // Chuyển hướng sang trang giỏ hàng/checkout kèm số lượng
-            window.location.href = `/cart/add?product_id=${productId}&quantity=${quantity}`;
+            // Gửi request AJAX thay vì chuyển trang
+            fetch('/cart/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `product_id=${productId}&quantity=${quantity}`
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Đã thêm vào giỏ hàng!');
+                    } else {
+                        alert(data.message || 'Thêm vào giỏ hàng thất bại!');
+                    }
+                })
+                .catch(() => {
+                    alert('Lỗi khi thêm vào giỏ hàng!');
+                });
         });
     }
 });
